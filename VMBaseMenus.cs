@@ -47,7 +47,8 @@ namespace Core
         private string _header = string.Empty;
         public string Header
         {
-            get => _header; set
+            get => _header; 
+            set
             {
                 if (value != _header)
                 {

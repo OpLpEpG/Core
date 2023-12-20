@@ -9,6 +9,13 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Core
 {
+    /// <summary>
+    /// модель меню
+    /// </summary>
+    /// <param name="ParentStaticRootID"></param>
+    /// <param name="ContentID"></param>
+    /// <param name="Header"></param>
+    /// <param name="Priority"></param>
     public record rootMenu(string ParentStaticRootID, string ContentID, string Header, int Priority);
     public static class RootMenus
     {
@@ -31,7 +38,7 @@ namespace Core
 
     public class MenuServer: PriorityServer, IMenuItemServer
     {
-        public static ObservableCollection<MenuItemVM> Items = new ObservableCollection<MenuItemVM>();
+        public static ObservableCollection<PriorityItem> Items = new ObservableCollection<PriorityItem>();
         private MenuItemVM? Recur(IEnumerable<PriorityItem> root, Func<MenuItemVM, bool> TestFunc)
         {
             foreach (var m in root)
@@ -64,10 +71,14 @@ namespace Core
         }
         void IMenuItemServer.Add(string ParentContentID, IEnumerable<MenuItemVM> Menus)
         {
-            var m = Recur(Items, (i) => i.ContentID == ParentContentID);
-            m ??= CreateStatandartMenu(RootMenus.TryCreate(ParentContentID));
-            if (m == null) return;
-            base.Add(m.Items, Menus);
+            if (ParentContentID == "ROOT") base.Add(Items, Menus);
+            else
+            {
+                var m = Recur(Items, (i) => i.ContentID == ParentContentID);
+                m ??= CreateStatandartMenu(RootMenus.TryCreate(ParentContentID));
+                if (m == null) return;
+                base.Add(m.Items, Menus);
+            }
         }
         void IMenuItemServer.Remove(string ContentID)
         {
@@ -84,8 +95,14 @@ namespace Core
                     }
                 return false;
             });
-            if (m != null && item != null) m.Items.Remove(item);
-            UpdateSeparatorGroup(m);
+            if (m != null && item != null)
+            {
+                m.Items.Remove(item);
+
+                if (m.Items.Count == 0) Remove(new[] {m});
+
+                else UpdateSeparatorGroup(m);
+            }
         }
         public bool Contains(string ContentID)
         {

@@ -31,6 +31,7 @@ namespace Core
     }
     public static class RootMenusID
     {
+        public static string ROOT => "ROOT";
         public static string NFile => "NFile";
         public static string NFile_Create => "NFile_Create";
         public static string NFile_Open => "NFile_Open";
@@ -43,6 +44,7 @@ namespace Core
         public static string NFile_Last_Projects => "NFile_Last_Projects";
         public static string NFile_Last_File => "NFile_Last_File";
         public static string NShow => "NShow";
+        public static string NDebugs => "NDebugs";
         public static string NHidden => "NHidden";
 
     }

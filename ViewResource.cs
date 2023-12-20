@@ -49,4 +49,42 @@ namespace Core
         }
     }
 
+    public class FormResource
+    {
+        private static ResourceDictionary _dictionary;
+        public static ResourceDictionary Dictionary => _dictionary;
+        static FormResource()
+        {
+            _dictionary = new ResourceDictionary();
+
+            _dictionary.Source = new Uri("Core;component/ViewResourceForms.xaml", UriKind.Relative);
+        }
+
+    }
+
+    public class PanesStyleSelector : StyleSelector
+    {
+        public override System.Windows.Style SelectStyle(object item, System.Windows.DependencyObject container)
+        {
+            var name = item == null ? null : item.GetType().Name;
+            if (name != null && FormResource.Dictionary.Contains(name + "Style"))
+            {
+                return (Style)FormResource.Dictionary[name + "Style"];
+            }
+            return base.SelectStyle(item, container);
+        }
+    }
+    public class PanesTemplateSelector : DataTemplateSelector
+    {
+        public override System.Windows.DataTemplate SelectTemplate(object item, System.Windows.DependencyObject container)
+        {
+            var name = item == null ? null : item.GetType().Name;
+            if (name != null && FormResource.Dictionary.Contains(name + "Template"))
+            {
+                return (DataTemplate)FormResource.Dictionary[name + "Template"];
+            }
+            return base.SelectTemplate(item, container);
+        }
+    }
+
 }
