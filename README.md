@@ -102,18 +102,18 @@ VMBase.cs - определяет класс от которого происхо
   </ToolBar>
  ```
  ##### логическое древо привязка к модели
- меню:
+ меню:  
     DataContext = Binding MenuVM   
     ItemsSource = Binding RootItems      
- тулбар:
+ тулбар:  
     DataContext=Binding ToolGlyphVM  
     ItemsSource=Binding Items  
 
  ##### визуальное древо
- меню:
-    ItemContainerTemplateSelector = MenuTemplateSelector
- тулбар:
-    ItemTemplateSelector = ToolTemplateSelector
+ меню:  
+    ItemContainerTemplateSelector = MenuTemplateSelector   
+ тулбар:  
+    ItemTemplateSelector = ToolTemplateSelector   
 MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource.cs***
 ```
     public class ToolTemplateSelector : DataTemplateSelector
@@ -158,8 +158,8 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource
     }
 
 ```
-имя класса VM == ключ DataTemplate в словаре ресурсов (ViewResourceMenus,ViewResourceTools)
-***var name = item == null ? null : item.GetType().Name;***
+имя класса VM == ключ DataTemplate в словаре ресурсов (ViewResourceMenus,ViewResourceTools)   
+***var name = item == null ? null : item.GetType().Name;***   
 словари ресурсов могут объеденяться
 ```
   MenuTemplateSelector.Dictionary.MergedDictionaries.Add(new ResourceDictionary()
@@ -168,4 +168,4 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource
   });
 
 ```
-при создании уникальных VM типов меню и toolBar 
+при создании уникальных VM меню, toolBar  и словарей стилей к ним 
