@@ -103,11 +103,11 @@ VMBase.cs - определяет класс от которого происхо
  ```
  ##### логическое древо привязка к модели
  меню:
-    DataContext = Binding MenuVM 
-    ItemsSource = Binding RootItems    
+    DataContext = Binding MenuVM   
+    ItemsSource = Binding RootItems      
  тулбар:
-    DataContext=Binding ToolGlyphVM
-    ItemsSource=Binding Items
+    DataContext=Binding ToolGlyphVM  
+    ItemsSource=Binding Items  
 
  ##### визуальное древо
  меню:
