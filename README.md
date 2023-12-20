@@ -1,7 +1,7 @@
-# Core
-Описывает глобальные переменные, классы, интерфейсы, стили, привязки
+п»ї# Core
+РћРїРёСЃС‹РІР°РµС‚ РіР»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ, РєР»Р°СЃСЃС‹, РёРЅС‚РµСЂС„РµР№СЃС‹, СЃС‚РёР»Рё, РїСЂРёРІСЏР·РєРё
 ## VM
-VMBase.cs - определяет класс от которого происходят все VM
+VMBase.cs - РѕРїСЂРµРґРµР»СЏРµС‚ РєР»Р°СЃСЃ РѕС‚ РєРѕС‚РѕСЂРѕРіРѕ РїСЂРѕРёСЃС…РѕРґСЏС‚ РІСЃРµ VM
 ```
     public class VMBase: ObservableObject
     {        
@@ -11,8 +11,8 @@ VMBase.cs - определяет класс от которого происходят все VM
 ```
 ## Priority 
 ### PriorityItems.cs
- Главное окно приложения имеет меню и ToolBarы, 
- VM их элементов потомки PriorityItem,
+ Р“Р»Р°РІРЅРѕРµ РѕРєРЅРѕ РїСЂРёР»РѕР¶РµРЅРёСЏ РёРјРµРµС‚ РјРµРЅСЋ Рё ToolBarС‹, 
+ VM РёС… СЌР»РµРјРµРЅС‚РѕРІ РїРѕС‚РѕРјРєРё PriorityItem,
 ```
     public abstract class PriorityItem: VMBase
     {
@@ -31,16 +31,16 @@ VMBase.cs - определяет класс от которого происходят все VM
         public string? IconSource { get; set; }
     }
 ```
- Priority - сортировка положения в меню
- Group - разные группы выделяются сепараторами
+ Priority - СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕР»РѕР¶РµРЅРёСЏ РІ РјРµРЅСЋ
+ Group - СЂР°Р·РЅС‹Рµ РіСЂСѓРїРїС‹ РІС‹РґРµР»СЏСЋС‚СЃСЏ СЃРµРїР°СЂР°С‚РѕСЂР°РјРё
  ### VMBaseMenus, VMBaseToolBar
- VMBaseMenus.cs, VMBaseToolBar.cs - реализации VM основных меню и кнопок 
- ViewResourceTools.xaml, ViewResourceMenus.xaml - ResourceDictionary сстветствующие стили
- и DataTemplate
+ VMBaseMenus.cs, VMBaseToolBar.cs - СЂРµР°Р»РёР·Р°С†РёРё VM РѕСЃРЅРѕРІРЅС‹С… РјРµРЅСЋ Рё РєРЅРѕРїРѕРє 
+ ViewResourceTools.xaml, ViewResourceMenus.xaml - ResourceDictionary СЃСЃС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ СЃС‚РёР»Рё
+ Рё DataTemplate
 
  ### MenuServer ToolServer
- добавлениe удалениe MenuItem, ToolItem должно происходить через 
- серверы (для сортировки и создания сепараторов)
+ РґРѕР±Р°РІР»РµРЅРёe СѓРґР°Р»РµРЅРёe MenuItem, ToolItem РґРѕР»Р¶РЅРѕ РїСЂРѕРёСЃС…РѕРґРёС‚СЊ С‡РµСЂРµР· 
+ СЃРµСЂРІРµСЂС‹ (РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё Рё СЃРѕР·РґР°РЅРёСЏ СЃРµРїР°СЂР°С‚РѕСЂРѕРІ)
  ```
      public interface IMenuItemServer
     {
@@ -64,7 +64,7 @@ VMBase.cs - определяет класс от которого происходят все VM
         public void UpdateSeparatorGroup(string BarContentID);
     }
  ```
- доступ к ним через сервисы
+ РґРѕСЃС‚СѓРї Рє РЅРёРј С‡РµСЂРµР· СЃРµСЂРІРёСЃС‹
  ```
      public static class ServicesRoot
     {
@@ -76,7 +76,7 @@ VMBase.cs - определяет класс от которого происходят все VM
     }
  ```
  ### View ViewResource.cs
- В основном окне меню и тулы обявлены так
+ Р’ РѕСЃРЅРѕРІРЅРѕРј РѕРєРЅРµ РјРµРЅСЋ Рё С‚СѓР»С‹ РѕР±СЏРІР»РµРЅС‹ С‚Р°Рє
  ```
     <Menu x:Name="menu" Style="{StaticResource ResourceKey={x:Static ToolBar.MenuStyleKey}}"
              ..........
@@ -101,20 +101,20 @@ VMBase.cs - определяет класс от которого происходят все VM
           ItemsSource="{Binding Items}">
   </ToolBar>
  ```
- ##### логическое древо привязка к модели
- меню:
+ ##### Р»РѕРіРёС‡РµСЃРєРѕРµ РґСЂРµРІРѕ РїСЂРёРІСЏР·РєР° Рє РјРѕРґРµР»Рё
+ РјРµРЅСЋ:
     DataContext = Binding MenuVM 
     ItemsSource = Binding RootItems    
- тулбар:
+ С‚СѓР»Р±Р°СЂ:
     DataContext=Binding ToolGlyphVM
     ItemsSource=Binding Items
 
- ##### визуальное древо
- меню:
+ ##### РІРёР·СѓР°Р»СЊРЅРѕРµ РґСЂРµРІРѕ
+ РјРµРЅСЋ:
     ItemContainerTemplateSelector = MenuTemplateSelector
- тулбар:
+ С‚СѓР»Р±Р°СЂ:
     ItemTemplateSelector = ToolTemplateSelector
-MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource.cs***
+MenuTemplateSelector, ToolTemplateSelector РѕР±СЉСЏРІР»РµРЅС‹ РІ ***ViewResource.cs***
 ```
     public class ToolTemplateSelector : DataTemplateSelector
     {
@@ -158,9 +158,9 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource.cs***
     }
 
 ```
-имя класса VM == ключ DataTemplate в словаре ресурсов (ViewResourceMenus,ViewResourceTools)
+РёРјСЏ РєР»Р°СЃСЃР° VM == РєР»СЋС‡ DataTemplate РІ СЃР»РѕРІР°СЂРµ СЂРµСЃСѓСЂСЃРѕРІ (ViewResourceMenus,ViewResourceTools)
 ***var name = item == null ? null : item.GetType().Name;***
-словари ресурсов могут объеденяться
+СЃР»РѕРІР°СЂРё СЂРµСЃСѓСЂСЃРѕРІ РјРѕРіСѓС‚ РѕР±СЉРµРґРµРЅСЏС‚СЊСЃСЏ
 ```
   MenuTemplateSelector.Dictionary.MergedDictionaries.Add(new ResourceDictionary()
   {
@@ -168,4 +168,4 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource.cs***
   });
 
 ```
-при создании уникальных VM типов меню и toolBar
+РїСЂРё СЃРѕР·РґР°РЅРёРё СѓРЅРёРєР°Р»СЊРЅС‹С… VM С‚РёРїРѕРІ РјРµРЅСЋ Рё toolBar 
