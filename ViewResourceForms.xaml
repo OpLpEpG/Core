@@ -27,11 +27,15 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="LayoutAnchorableItemStyle" TargetType="{x:Type adctrl:LayoutAnchorableItem}" BasedOn="{StaticResource LayoutItemStyle}">
+    <Style x:Key="ToolVMStyle" 
+           TargetType="{x:Type adctrl:LayoutAnchorableItem}" 
+           BasedOn="{StaticResource LayoutItemStyle}">
         <Setter Property="CanHide" Value="{Binding Model.CanHide}"/>
     </Style>
 
-    <Style x:Key="LayoutDocumentItemStyle" TargetType="{x:Type adctrl:LayoutDocumentItem}" BasedOn="{StaticResource LayoutItemStyle}">
+    <Style x:Key="DocumentVMStyle" 
+           TargetType="{x:Type adctrl:LayoutDocumentItem}" 
+           BasedOn="{StaticResource LayoutItemStyle}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding Model.DescriptionEnable}" Value="True">
                 <Setter Property="Description" Value="{Binding Model.Description}"/>
@@ -39,7 +43,7 @@
         </Style.Triggers>
     </Style>
     
-    <DataTemplate x:Key="LayoutAnchorableTemplate">
+    <!--<DataTemplate x:Key="LayoutAnchorableTemplate">
         <TextBlock Text="{Binding Path=Title,StringFormat=Tool {0:s}!}"/>
     </DataTemplate>
     
@@ -53,6 +57,29 @@
             </TextBlock.Text>
         </TextBlock>
     </DataTemplate>
+
+    <Style x:Key="ToolVMStyle" 
+           TargetType="{x:Type adctrl:LayoutAnchorableItem}" 
+           BasedOn="{StaticResource LayoutAnchorableItemStyle}"/>
+    <Style x:Key="DocumentVMStyle" 
+           TargetType="{x:Type adctrl:LayoutDocumentItem}" 
+           BasedOn="{StaticResource LayoutDocumentItemStyle}"/>-->
+
+    <DataTemplate x:Key="ToolVMTemplate">
+        <StackPanel>
+            <TextBlock Text="Object"/>
+            <TextBlock Text="{Binding Title}"/>
+        </StackPanel>
+    </DataTemplate>
+
+
+    <DataTemplate x:Key="DocumentVMTemplate">
+        <StackPanel>
+            <TextBlock Text="{Binding}"/>
+            <TextBlock Text="{Binding ContentID}"/>
+        </StackPanel>
+    </DataTemplate>
+
 
 
 </ResourceDictionary>

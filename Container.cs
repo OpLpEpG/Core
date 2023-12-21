@@ -13,10 +13,6 @@ using Xceed.Wpf.AvalonDock.Layout;
 
 namespace Core
 {
-    //public static class Locator 
-    //{
-    //    public static IServiceProvider Services => (Application.Current as IServiceProvider)!;
-    //}
     public record StdLogg(bool Error, bool Info, bool Trace)
     {
         public StdLogg() : this(true, false, false) { }
@@ -48,35 +44,4 @@ namespace Core
         public static string NHidden => "NHidden";
 
     }
-    /// <summary>
-    /// Доступ к основному окну View (противоречет MVVM)
-    /// </summary>
-    //public interface IMainWindow
-    //{
-    //    //public Window Window { get; }
-    //    //public Grid GridRoot { get; }
-    //    //public ToolBarTray ToolBarTray { get; }
-    //    //public ToolBar ToolBarMenu { get; }
-    //    //public ToolBar ToolBarSpeedButtons { get; }
-    //    //public ToolBar ToolBarButtons { get; }
-    //    //public DockingManager DockManager { get; }
-    //    //public LayoutDocumentPane DocumentPane { get; }
-    //    //public StatusBar StatusBar { get; }
-    //    //public object? FindMenu(string name);
-    //    //public T AddToLayout<T>(
-    //    //        bool CanClose =true,
-    //    //        bool CanHide = false,
-    //    //        bool CanAutoHide = true,
-    //    //        bool CanFloat = true,
-    //    //        bool CanDockAsTabbedDocument = true
-    //    //        ) where T: class;
-    //    //public void AddToLayout(object content);
-    //    //public void AddToLayoutDocument(object content);
-    //}  
-    //public static class ServiceContainer 
-    //{
-    //    private readonly static List<Action<IServiceCollection>> _serv = new(); 
-    //    public static void Add(Action<IServiceCollection> ServAct) => _serv.Add(ServAct);
-    //    public static void Apply(IServiceCollection serviceProvider) => _serv.ForEach((a) => a(serviceProvider));
-    //}
 }

@@ -169,3 +169,121 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource
 
 ```
 при создании уникальных VM меню, toolBar  и словарей стилей к ним 
+
+## Окна (Forms)
+ управление AvalonDock 2.0
+### VM
+ VMBaseForms.cs определяет основные типы VM окон
+ ```
+ public abstract class VMBaseForms : VMBase
+ public class DocumentVM : VMBaseForms
+ public class ToolVM: VMBaseForms
+ ```
+ ViewResource.xaml определяет привязку VM стили Style и заглушки DataTemplate содержимого окон 
+ ```
+     <Style x:Key="LayoutItemStyle" TargetType="{x:Type adctrl:LayoutItem}">
+        <Setter Property="Title" Value="{Binding Model.Title}"/>
+        <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}"/>
+        <Setter Property="ContentId" Value="{Binding Model.ContentID}"/>
+        ...........................................
+    </Style>
+
+    <Style x:Key="ToolVMStyle" 
+           TargetType="{x:Type adctrl:LayoutAnchorableItem}" 
+           BasedOn="{StaticResource LayoutItemStyle}">
+        ..............................................
+    </Style>
+
+    <Style x:Key="DocumentVMStyle" 
+           TargetType="{x:Type adctrl:LayoutDocumentItem}" 
+           BasedOn="{StaticResource LayoutItemStyle}">
+           ...........................................................
+    </Style>
+    
+    <DataTemplate x:Key="ToolVMTemplate">
+    ................................................
+    </DataTemplate>
+
+
+    <DataTemplate x:Key="DocumentVMTemplate">
+    ...........................................
+    </DataTemplate>
+ ```
+
+ ### определение  AvalonDock DockingManager в основном окне 
+ ```
+         <a:DockingManager Name="dockManager" 
+                          DataContext="{StaticResource DockManagerVMKey}"
+                          AnchorablesSource="{Binding Tools}"
+                          DocumentsSource="{Binding Docs}"
+                          DocumentHeaderTemplate="{StaticResource LayoutDocumentHeaderKey}"
+                          DocumentTitleTemplate="{StaticResource LayoutDocumentHeaderKey}"
+                          LayoutUpdateStrategy="{StaticResource LayoutInitializerKey}"
+                          LayoutItemTemplateSelector="{StaticResource PanesTemplateSelectorKey}"
+                          LayoutItemContainerStyleSelector="{StaticResource PanesStyleSelectorKey}"
+                          .................................
+ ```
+ VM окон DockManagerVM  
+ Tools - присоединяемые системные окна   
+ Docs - присоединяемые окна документов   
+
+ LayoutItemTemplateSelector = PanesTemplateSelector  
+ LayoutItemContainerStyleSelector = PanesStyleSelector  
+
+ PanesTemplateSelector, PanesStyleSelector объавлены в ViewResource.cs идея аналогичная для меню и тулбар
+ ```
+    public class FormResource
+    {
+        private static ResourceDictionary _dictionary;
+        public static ResourceDictionary Dictionary => _dictionary;
+        static FormResource()
+        {
+            _dictionary = new ResourceDictionary();
+
+            _dictionary.Source = new Uri("Core;component/ViewResourceForms.xaml", UriKind.Relative);
+        }
+        public static object? Get(object item, string suffix) 
+        ...............................
+    }
+
+    public class PanesStyleSelector : StyleSelector
+    {
+        public override System.Windows.Style SelectStyle(object item, System.Windows.DependencyObject container)
+        {
+            var res = FormResource.Get(item, "Style");
+            return (res != null)?(Style) res : base.SelectStyle(item, container);
+        }
+    }
+    public class PanesTemplateSelector : DataTemplateSelector
+    {
+        public override System.Windows.DataTemplate SelectTemplate(object item, System.Windows.DependencyObject container)
+        {
+            var res = FormResource.Get(item, "Template");
+            return (res != null) ? (DataTemplate)res : base.SelectTemplate(item, container);
+        }
+    }
+ ```
+только к имени VM добавляюмся в словаре "Style" или "Template"
+
+реальные FormsResource.xaml
+```
+    <Style x:Key="ProjectsExplorerVMStyle" 
+           TargetType="{x:Type adctrl:LayoutAnchorableItem}" 
+           BasedOn="{StaticResource LayoutAnchorableItemStyle}"/>
+
+    <DataTemplate x:Key="ProjectsExplorerVMTemplate">
+        <v:ProjectsExplorerUC/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="TextLogVMTemplate">
+        <v:TextLogUC/>
+    </DataTemplate>
+```
+
+словарь ресурсов может объедениться
+```
+   FormResource.Dictionary.MergedDictionaries.Add(new ResourceDictionary()
+   {
+       Source = new Uri("pack://application:,,,/Views/FormsResource.xaml")
+   });
+```
