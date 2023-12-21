@@ -179,7 +179,8 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource
  public class DocumentVM : VMBaseForms
  public class ToolVM: VMBaseForms
  ```
- ViewResource.xaml определяет привязку VM стили Style и заглушки DataTemplate содержимого окон 
+ ViewResource.xaml определяет стили (привязку VM к AvalonDock LayoutItem,LayoutAnchorableItem,LayoutDocumentItem  
+ и заглушки DataTemplate (UserControl) содержимого окон 
  ```
      <Style x:Key="LayoutItemStyle" TargetType="{x:Type adctrl:LayoutItem}">
         <Setter Property="Title" Value="{Binding Model.Title}"/>
@@ -226,6 +227,26 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource
  VM окон DockManagerVM  
  Tools - присоединяемые системные окна   
  Docs - присоединяемые окна документов   
+ DockManagerVM  определен в основном модуле реализует IFormsServer (объявлен VMBaseForms.cs) для доступа к VM  
+ <span style="color:red">IFormsServer - на стадии разработки</span>.
+ ```
+     public interface IFormsServer
+    {
+        /// <summary>
+        /// регистрируем генератор модели представления
+        /// </summary>
+        /// <param name="RootContentID"> RootContentID.AnyData.AnyData...) </param>
+        /// <param name="RegFunc">генератор модели представления</param>
+        void RegisterModelView(string RootContentID, Func<VMBaseForms> RegFunc);
+        VMBaseForms? Contains(string ContentID);
+        VMBaseForms Add(VMBaseForms vmbase);
+
+        /// <param name="ContentID"> ContentID= RootContentID.AnyData.AnyData...</param>
+        /// <returns></returns>
+        VMBaseForms AddOrGet(string ContentID);
+        void Remove(VMBaseForms RemForm);
+    }
+ ```
 
  LayoutItemTemplateSelector = PanesTemplateSelector  
  LayoutItemContainerStyleSelector = PanesStyleSelector  
@@ -263,7 +284,7 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource
         }
     }
  ```
-только к имени VM добавляюмся в словаре "Style" или "Template"
+только к имени VM в словаре добавляются суффиксы "Style" или "Template", также поиск ведется среди родителей VM
 
 реальные FormsResource.xaml
 ```
