@@ -6,7 +6,7 @@ VMBase.cs - определяет класс от которого происхо
     public class VMBase: ObservableObject
     {        
         public static IServiceProvider ServiceProvider => (IServiceProvider) Application.Current;
-        public string? ContentID { get; set; }
+        public virtual string? ContentID { get; set; }
     }
 ```
 ## Priority 

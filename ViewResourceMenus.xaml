@@ -49,5 +49,13 @@
     <DataTemplate x:Key="OnSubMenuOpenMenuItemVM">
         <MenuItem Style="{StaticResource OnSubMenuOpenMenuItemStyle}"/>
     </DataTemplate>
-    
+
+    <DataTemplate x:Key="MenuOpenFileVM" DataType="MenuOpenFileVM">
+        <local:FileOpenMenuItemView Style="{StaticResource MenuItemKey}"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MenuSaveFileVM" DataType="MenuSaveFileVM">
+        <local:FileSaveMenuItemView Style="{StaticResource MenuItemKey}"/>
+    </DataTemplate>
+
 </ResourceDictionary>
