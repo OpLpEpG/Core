@@ -169,6 +169,73 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource
 
 ```
 при создании уникальных VM меню, toolBar  и словарей стилей к ним 
+### регистрация статических менюшек
+необходимо создать Factory класс реализующий IMenuItemClient
+```
+    public interface IMenuItemClient
+    {
+        public void AddStaticMenus(IMenuItemServer s);
+    }
+```
+пример Factory класс
+```
+    public class ProjectsExplorerMenuFactory : IMenuItemClient
+    {
+        void IMenuItemClient.AddStaticMenus(IMenuItemServer _menuItemServer)
+        {
+            _menuItemServer.Add(RootMenusID.NShow, new[] {
+                new CommandMenuItemVM
+                {
+                    ContentID = "CidShowProjectsExplorer",
+                    Header = Properties.Resources.tProjectExplorer,
+                    IconSource = "pack://application:,,,/Images/Project.PNG",
+                    Priority = 0,
+                    Command = new RelayCommand(ShowPE)
+                },
+            });
+            _menuItemServer.Add(RootMenusID.NFile_Create, new MenuItemVM[] {
+                new MenuOpenFile
+                {
+                    ContentID = "FOP",
+                    Header = Properties.Resources.nfile_Open,
+                    IconSource = "pack://application:,,,/Images/Project.PNG",
+                    Title = Properties.Resources.nfile_Open,
+                    Filter = "Text documents (.txt)|*.txt|Any documents (.doc)|*.doc|Any (*)|*",
+                    DefaultExt = ".txt",
+                    CustomPlaces = new object[] 
+                    {
+                        @"C:\Users\Public\Documents\Горизонт\WorkProg\Projects\",
+                        @"C:\XE\Projects\Device2\_exe\Debug\Метрология\",
+                        @"G:\Мой диск\mtr\",
+                        new Guid("FDD39AD0-238F-46AF-ADB4-6C85480369C7"),//документы
+                        new Guid("1777F761-68AD-4D8A-87BD-30B759FA33DD"),//избрвнное
+                    }
+                },
+                new CommandMenuItemVM
+                {
+                    ContentID = "CidShowProjectsExplorer",
+                    Header = Properties.Resources.nProject_New,
+                    IconSource = "pack://application:,,,/Images/NewProject.PNG",
+                    Priority = -1000,
+                    Command = new RelayCommand(ShowPE)
+                },
+            });
+      }
+........................................
+
+```
+и добавить как сервис
+```
+  services.AddTransient<IMenuItemClient, ProjectsExplorerMenuFactory>();
+```
+при запуске программы меню добавятся
+```
+    var ms = _host.Services.GetRequiredService<IMenuItemServer>();
+    var madds = _host.Services.GetRequiredService< IEnumerable<IMenuItemClient>>();
+    foreach ( var madd in madds ) madd.AddStaticMenus(ms);
+```
+
+
 
 ## Окна (Forms)
  управление AvalonDock 2.0
@@ -179,7 +246,7 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource
  public class DocumentVM : VMBaseForms
  public class ToolVM: VMBaseForms
  ```
- ViewResource.xaml определяет стили (привязку VM к AvalonDock LayoutItem,LayoutAnchorableItem,LayoutDocumentItem  
+ ViewResourceForms.xaml определяет стили (привязку VM к AvalonDock LayoutItem,LayoutAnchorableItem,LayoutDocumentItem  
  и заглушки DataTemplate (UserControl) содержимого окон 
  ```
      <Style x:Key="LayoutItemStyle" TargetType="{x:Type adctrl:LayoutItem}">
@@ -228,7 +295,7 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource
  Tools - присоединяемые системные окна   
  Docs - присоединяемые окна документов   
  DockManagerVM  определен в основном модуле реализует IFormsServer (объявлен VMBaseForms.cs) для доступа к VM  
- <span style="color:red">IFormsServer - на стадии разработки</span>.
+ <span style="color:red">**IFormsServer - на стадии разработки**</span>.
  ```
      public interface IFormsServer
     {
@@ -238,12 +305,12 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource
         /// <param name="RootContentID"> RootContentID.AnyData.AnyData...) </param>
         /// <param name="RegFunc">генератор модели представления</param>
         void RegisterModelView(string RootContentID, Func<VMBaseForms> RegFunc);
-        VMBaseForms? Contains(string ContentID);
-        VMBaseForms Add(VMBaseForms vmbase);
-
         /// <param name="ContentID"> ContentID= RootContentID.AnyData.AnyData...</param>
         /// <returns></returns>
         VMBaseForms AddOrGet(string ContentID);
+
+        VMBaseForms? Contains(string ContentID);
+        VMBaseForms Add(VMBaseForms vmbase);
         void Remove(VMBaseForms RemForm);
     }
  ```
@@ -307,4 +374,46 @@ MenuTemplateSelector, ToolTemplateSelector объявлены в ***ViewResource
    {
        Source = new Uri("pack://application:,,,/Views/FormsResource.xaml")
    });
+```
+### Динамическое изменение меню и тулбаров при изменении фокуса окна
+идея минимизировать элементы управления в окнах
+```
+  protected List<PriorityItemBase> DynamicItems = new List<PriorityItemBase>();
+
+  protected delegate void ActivateHandler();
+  protected event ActivateHandler? OnMenuActivate;
+  protected event ActivateHandler? OnMenuDeActivate;
+```
+по событию *OnMenuActivate* создать tools, menus, вручную добавить в DynamicItems, использовать IToolServer, IMenuItemServer
+
+событие *OnMenuDeActivate* предназначено только для обнуления внутренних ссылок, если есть, на tools, menus.
+Очищать DynamicItems и удалять tools, menus из IToolServer, IMenuItemServer не надо, будет удалено автоматически
+### регистрирование окна
+VM окна регистрируется следующим образом  
+имеется следующая вспомогательная конструкция
+```
+    public interface IFormsRegistrator
+    {
+        void Register(IFormsServer fs);
+    }
+    public class FormsRegistrator<T> : IFormsRegistrator
+        where T : VMBaseForms
+    {
+        public void Register(IFormsServer fs)
+        {
+            fs.RegisterModelView(typeof(T).Name, VMBase.ServiceProvider.GetRequiredService<T>);
+        }
+    }
+```
+модели представления добавляются как сервисы
+и как IFormsRegistrator через обертку FormsRegistrator
+```
+                services.AddTransient<ExceptLogVM>();
+                services.AddTransient<IFormsRegistrator, FormsRegistrator<ExceptLogVM>>();
+```
+затем когда создано основное окно, menu, toolbars, dockmanager VM окна регистрируются в DockManagerVM реализующий IFormsServer
+```
+  var fs = _host.Services.GetRequiredService<IFormsServer>();
+  var frs = _host.Services.GetRequiredService<IEnumerable<IFormsRegistrator>>();
+  foreach (var fr in frs) fr.Register(fs);
 ```

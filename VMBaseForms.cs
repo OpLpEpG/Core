@@ -33,12 +33,15 @@ namespace Core
         /// <param name="RootContentID"> RootContentID.AnyData.AnyData...) </param>
         /// <param name="RegFunc">генератор модели представления</param>
         void RegisterModelView(string RootContentID, Func<VMBaseForms> RegFunc);
-        VMBaseForms? Contains(string ContentID);
-        VMBaseForms Add(VMBaseForms vmbase);
-
+        /// <summary>
+        /// работает если для ContentID (RootContentID) зарегистрирована RegisterModelView RegFunc фабрика окна
+        /// </summary>
         /// <param name="ContentID"> ContentID= RootContentID.AnyData.AnyData...</param>
         /// <returns></returns>
         VMBaseForms AddOrGet(string ContentID);
+        // низкоуровневые вункции
+        VMBaseForms? Contains(string ContentID);
+        VMBaseForms Add(VMBaseForms vmbase);
         void Remove(VMBaseForms RemForm);
     }
     /// <summary>
@@ -235,8 +238,8 @@ namespace Core
         #region IsActive
 
         protected delegate void ActivateHandler();
-        protected event ActivateHandler? OnActivate;
-        protected event ActivateHandler? OnDeActivate;
+        private event ActivateHandler? OnActivate;
+        private event ActivateHandler? OnDeActivate;
         protected event ActivateHandler? OnMenuActivate;
         protected event ActivateHandler? OnMenuDeActivate;
         private bool _isActive = false;

@@ -18,6 +18,10 @@ namespace Core
     public class VMBase: ObservableObject
     {        
         public static IServiceProvider ServiceProvider => (IServiceProvider) Application.Current;
+        //TODO: set -должен быть с PropertyChanged или виртуальный анализировать AnyData.AnyData
+        /// <param name="RootContentID"> RootContentID.AnyData.AnyData...) </param>
+        // при загрузки DockManager  ContentID присваивается генерирующейся VM viewмодели AddOrGet(string ContentID);
+        // например для монитора СОМ если нет модели MM (COM) то закрыть (удалить) окно
         public string? ContentID { get; set; }
     }
 }
